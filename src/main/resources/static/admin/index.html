@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gateway Agent Admin</title>
+  <link rel="stylesheet" href="/admin/styles.css">
+</head>
+<body>
+  <main class="layout">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">gateway_agent</p>
+        <h1>Gateway Admin</h1>
+        <p class="muted">轻量级管理与接口测试页面。当前用于健康检查、模型列表和 chat completions smoke test。</p>
+      </div>
+      <div class="status-pill" id="page-status">ready</div>
+    </section>
+
+    <section class="card">
+      <h2>API Key</h2>
+      <p class="muted">用于调用受保护的 /v1 接口。会保存在当前浏览器 localStorage 中。</p>
+      <div class="row">
+        <input id="api-key" type="password" placeholder="GATEWAY_API_KEY">
+        <button id="save-key">保存</button>
+        <button id="clear-key" class="secondary">清除</button>
+      </div>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h2>Health</h2>
+        <div class="button-row">
+          <button id="check-health">检查 /health</button>
+          <button id="check-actuator" class="secondary">检查 /actuator/health</button>
+        </div>
+        <pre id="health-output">尚未检查</pre>
+      </article>
+
+      <article class="card">
+        <h2>Models</h2>
+        <button id="load-models">加载模型</button>
+        <select id="model-select">
+          <option value="gateway-stub-chat">gateway-stub-chat</option>
+        </select>
+        <pre id="models-output">尚未加载</pre>
+      </article>
+    </section>
+
+    <section class="card">
+      <h2>Chat Test</h2>
+      <label for="message-input">User message</label>
+      <textarea id="message-input" rows="5">hello</textarea>
+      <div class="row compact">
+        <label for="temperature-input">Temperature</label>
+        <input id="temperature-input" type="number" min="0" max="2" step="0.1" value="0.7">
+      </div>
+      <button id="send-chat">发送测试请求</button>
+      <div class="response-block">
+        <h3>Assistant content</h3>
+        <div id="assistant-output" class="assistant-output">尚未发送</div>
+      </div>
+      <div class="response-block">
+        <h3>Raw response</h3>
+        <pre id="chat-output">尚未发送</pre>
+      </div>
+    </section>
+  </main>
+  <script src="/admin/app.js"></script>
+</body>
+</html>

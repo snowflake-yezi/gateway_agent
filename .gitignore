@@ -1,0 +1,10 @@
+target/
+.idea/
+.vscode/
+*.iml
+*.log
+.env
+.env.local
+.env.debian
+.claude/
+!.env.example
