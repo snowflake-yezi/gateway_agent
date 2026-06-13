@@ -3,6 +3,7 @@ package com.gateway.agent.service;
 import com.gateway.agent.config.GatewayProperties;
 import com.gateway.agent.dto.openai.ModelListResponse;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,7 +26,7 @@ public class ModelCatalogService {
                     model.setCreated(System.currentTimeMillis() / 1000);
                     return model;
                 })
-                .toList();
+                .collect(Collectors.toList());
         response.setData(models);
         return response;
     }
