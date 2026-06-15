@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ServerWebInputException;
 
+/**
+ * Normalizes controller-level failures into OpenAI-style error envelopes.
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 

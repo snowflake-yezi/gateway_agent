@@ -17,12 +17,14 @@ public class ModelCatalogService {
 
     public ModelListResponse listModels() {
         ModelListResponse response = new ModelListResponse();
+        // /v1/models is served from configuration so the public model list stays deployment-driven.
         List<ModelListResponse.Model> models = gatewayProperties.getModelCatalog().stream()
                 .map(definition -> {
                     ModelListResponse.Model model = new ModelListResponse.Model();
                     model.setId(definition.getId());
                     model.setObject(definition.getObject());
                     model.setOwnedBy(definition.getOwnedBy());
+                    // The scaffold does not persist model metadata yet, so created is generated per response.
                     model.setCreated(System.currentTimeMillis() / 1000);
                     return model;
                 })

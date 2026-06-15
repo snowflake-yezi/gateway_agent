@@ -8,6 +8,12 @@ import java.util.List;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
 
+/**
+ * 绑定 application.yml 里的 gateway.* 配置。
+ *
+ * <p>这个类相当于“网关配置模型”：鉴权、模型目录、路由注册表都会先从 YAML/环境变量
+ * 绑定到这里，再被 Service、Filter、RoutingStrategy 等组件使用。</p>
+ */
 @Validated
 @ConfigurationProperties(prefix = "gateway")
 public class GatewayProperties {
@@ -45,6 +51,12 @@ public class GatewayProperties {
         this.routes = routes;
     }
 
+    /**
+     * 网关调用方鉴权配置。
+     *
+     * <p>这里校验的是“谁可以调用这个网关”，不是上游模型平台的 API Key。
+     * 真实上游 Provider 的密钥后续应放在单独的 provider/channel 配置里。</p>
+     */
     public static class Auth {
         private boolean enabled = true;
         private String apiKey = "change-me";
@@ -75,6 +87,11 @@ public class GatewayProperties {
         }
     }
 
+    /**
+     * /v1/models 对外展示的模型条目。
+     *
+     * <p>它解决的是“客户端能看到哪些模型名”的问题。实际请求怎么转发，仍然由 routes 决定。</p>
+     */
     public static class ModelDefinition {
         @NotBlank
         private String id;
@@ -118,6 +135,13 @@ public class GatewayProperties {
         }
     }
 
+    /**
+     * 路由注册表条目。
+     *
+     * <p>它解决的是“某个模型请求应该交给哪个 provider/channel 处理”的问题。
+     * 当前版本只使用 stub provider，后续接入 OpenAI-compatible、Anthropic、OpenRouter 等上游时，
+     * 可以继续复用这层结构。</p>
+     */
     public static class RouteDefinition {
         @NotBlank
         private String routeId;

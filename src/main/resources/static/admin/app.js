@@ -2,6 +2,7 @@ const keyInput = document.querySelector('#api-key');
 const pageStatus = document.querySelector('#page-status');
 const modelSelect = document.querySelector('#model-select');
 
+// Keep the admin page dependency-free; localStorage is only for local browser convenience.
 keyInput.value = localStorage.getItem('gateway.apiKey') || '';
 
 document.querySelector('#save-key').addEventListener('click', () => {
@@ -15,6 +16,7 @@ document.querySelector('#clear-key').addEventListener('click', () => {
   setStatus('API key cleared');
 });
 
+// Health endpoints are public; /v1 endpoints below attach the gateway API key.
 document.querySelector('#check-health').addEventListener('click', () => getJson('/health', 'health-output', false));
 document.querySelector('#check-actuator').addEventListener('click', () => getJson('/actuator/health', 'health-output', false));
 document.querySelector('#load-models').addEventListener('click', loadModels);
@@ -56,6 +58,7 @@ async function sendChat() {
     });
     const data = await response.json();
     output.textContent = JSON.stringify(data, null, 2);
+    // Error responses do not have choices, so optional chaining keeps the UI useful while debugging.
     assistantOutput.textContent = data?.choices?.[0]?.message?.content || '(no assistant content)';
     setStatus(response.ok ? 'chat ok' : `chat failed ${response.status}`, !response.ok);
   } catch (error) {

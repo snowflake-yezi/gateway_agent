@@ -1,7 +1,9 @@
+# Build the executable jar with Maven, then copy only the runtime artifact into a slim JRE image.
 FROM maven:3.9.8-eclipse-temurin-17 AS build
 WORKDIR /workspace
 
 COPY pom.xml ./
+# Cache dependencies separately so source-only changes rebuild faster.
 RUN mvn -B dependency:go-offline
 
 COPY src ./src
@@ -10,6 +12,7 @@ RUN mvn -B clean package
 FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 
+# curl is present for Docker Compose health checks; appuser keeps the service from running as root.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends curl \
     && rm -rf /var/lib/apt/lists/* \

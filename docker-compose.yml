@@ -5,7 +5,9 @@ services:
       dockerfile: Dockerfile
     image: gateway-agent:local
     container_name: gateway-agent
+    # Server-friendly default: restart after daemon reboot or transient failure unless manually stopped.
     restart: unless-stopped
+    # Runtime-only settings live in .env; do not commit real secrets.
     env_file:
       - .env
     environment:
@@ -15,8 +17,10 @@ services:
       GATEWAY_API_KEY: ${GATEWAY_API_KEY:-change-me}
       GATEWAY_API_KEY_HEADER: ${GATEWAY_API_KEY_HEADER:-X-API-Key}
     ports:
+      # HOST_PORT is what the server exposes; SERVER_PORT is where Spring listens inside the container.
       - "${HOST_PORT:-8080}:${SERVER_PORT:-8080}"
     healthcheck:
+      # Keep /actuator/health public so Docker can check liveness without a gateway API key.
       test: ["CMD-SHELL", "curl -fsS http://localhost:${SERVER_PORT:-8080}/actuator/health || exit 1"]
       interval: 30s
       timeout: 3s

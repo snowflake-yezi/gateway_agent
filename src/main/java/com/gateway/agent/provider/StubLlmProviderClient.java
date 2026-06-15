@@ -8,6 +8,9 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
+/**
+ * Deterministic scaffold provider used to verify request, routing, and response plumbing before real upstreams exist.
+ */
 @Component
 public class StubLlmProviderClient implements LlmProviderClient {
 
@@ -26,6 +29,7 @@ public class StubLlmProviderClient implements LlmProviderClient {
 
         ChatCompletionResponse.Message message = new ChatCompletionResponse.Message();
         message.setRole("assistant");
+        // Include the route id so smoke tests make the selected route visible.
         message.setContent("Stub response from route " + routingDecision.routeId());
 
         ChatCompletionResponse.Choice choice = new ChatCompletionResponse.Choice();

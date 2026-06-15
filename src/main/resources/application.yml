@@ -5,21 +5,26 @@ management:
   endpoints:
     web:
       exposure:
+        # Container and orchestration checks use /actuator/health.
         include: health
   endpoint:
     health:
+      # Avoid exposing detailed health internals on the public health endpoint.
       show-details: never
 
 gateway:
   auth:
     enabled: ${GATEWAY_AUTH_ENABLED:true}
+    # The filter treats the checked-in default as misconfigured; set GATEWAY_API_KEY before exposing the service.
     api-key: ${GATEWAY_API_KEY:change-me}
     header-name: ${GATEWAY_API_KEY_HEADER:X-API-Key}
+  # Public model list returned by /v1/models.
   model-catalog:
     - id: gateway-stub-chat
       object: model
       owned-by: gateway-agent
       route: stub-chat
+  # Routing registry used by ChatCompletionService to select provider clients.
   routes:
     - route-id: stub-chat
       provider: stub
